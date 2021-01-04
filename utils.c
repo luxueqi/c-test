@@ -117,7 +117,7 @@ char* serachstr(char *big,char *left,char *right,char *result)
     
 }
 
-size_t mid2NodeF(char* big,char*left,char*right,struct Node* head)
+size_t mid2NodeF(char* big,char*left,char*right,struct Node* head,size_t c)
 {
     size_t i=0;
 
@@ -141,6 +141,11 @@ size_t mid2NodeF(char* big,char*left,char*right,struct Node* head)
         {
             addNode(data,head);
         }
+        if (c==i)
+        {
+            break;
+        }
+        
         src=rtmp+r_len;
         
     }
@@ -276,4 +281,50 @@ void unicodetoutf8(char*input,char*out)
     }
     strcat(out,ser);
     
+}
+
+char* strJqF(char*src,char*left,char*right)
+{
+    char* tmp=strstr(src,left),*result=NULL;
+    if(tmp!=NULL)
+    {  tmp+=strlen(left);
+       char* tmp2= strstr(tmp,right);
+       if (tmp2!=NULL)
+       {
+           size_t size=tmp2-tmp;
+           result=(char*)calloc(size+1,1);
+           strncpy(result,tmp,size);
+       }
+       
+    }
+    return result;
+}
+
+char* findKeyValueF(char*key,char*src)
+{
+    size_t k_len=strlen(key);
+    char keytmp[k_len+4];
+    memset(keytmp,0,k_len+4);
+    sprintf(keytmp,"\"%s\":",key);
+    char* tmpl=strstr(src,keytmp);
+    char* res=NULL;
+    if (tmpl!=NULL)
+    {
+        tmpl=tmpl+k_len+3;
+        char*tmpr=strstr(tmpl,",\"");
+        if (tmpr!=NULL)
+        {
+            if (*tmpl=='"')
+            {
+                tmpl+=1;
+                tmpr-=1;
+            }
+            size_t res_len=tmpr-tmpl;
+            res=calloc(res_len+1,1);
+            strncpy(res,tmpl,res_len);
+
+        }
+        
+    }
+    return res;
 }

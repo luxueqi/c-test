@@ -15,7 +15,7 @@ char *strtime(time_t tmp,char*format);
 char *creatDataF(char *src,size_t len);
 size_t split2NodeF(char* src,char* little,struct Node *head);
 char* serachstr(char *big,char *left,char *right,char *result);
-size_t mid2NodeF(char* big,char*left,char*right,struct Node* head);
+size_t mid2NodeF(char* big,char*left,char*right,struct Node* head,size_t c);
 size_t countStr(char*little,char*big);
 char* strRplaceF(char*old,char*new,char*src,size_t c_rplace);
 //void strRplaceFree(char** r);
@@ -24,4 +24,6 @@ void strFree(char**r);
 bool startWith(char*src,char*little);
 void utochinese(char* input,char*out);
 void unicodetoutf8(char*input,char*out);
+char* strJqF(char*src,char*left,char*right);
+char* findKeyValueF(char*key,char*src);
 #endif

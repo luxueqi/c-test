@@ -61,6 +61,7 @@ Herders initHeader(bool ajx)
 {
     Herders h=NULL;
     h=curl_slist_append(h,"Content-Type: application/x-www-form-urlencoded");
+   // h=curl_slist_append(h,"Content-Type: application/x-www-form-urlencoded");
     return setAjax(h,ajx);
     
 }
@@ -102,7 +103,6 @@ void scHerder(Herders h)
 //        // *hd=NULL;
 //     }
 // }
-
 
 
 long httputils(Http *http)
