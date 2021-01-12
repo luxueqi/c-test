@@ -95,7 +95,7 @@ int main(int argc,char *argv[])
             size_t r_len=strlen(h.result);
             char res[r_len+1];
             memset(res,0,r_len+1);
-            unicodetoutf8(h.result,res);
+            unicode2chinese(h.result,res);
             REDLOG("%d-no-%s",iline,res);
         }
         

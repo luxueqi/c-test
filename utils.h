@@ -22,8 +22,11 @@ char* strRplaceF(char*old,char*new,char*src,size_t c_rplace);
 char* strSubF(char*src,size_t i,size_t len);
 void strFree(char**r);
 bool startWith(char*src,char*little);
-void utochinese(char* input,char*out);
-void unicodetoutf8(char*input,char*out);
+// void unicode2utf8(char* input,char*out);
+// void unicode2chinese(char*input,char*out);
+void unicode2utf8(char* input);
+void unicode2chinese(char*input);
 char* strJqF(char*src,char*left,char*right);
 char* findKeyValueF(char*key,char*src);
+char* jsonKeyGetVal(char* key,char*src);
 #endif

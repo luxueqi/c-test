@@ -232,9 +232,9 @@ bool startWith(char*src,char*little)
 // void strSubFree(char**r)
 // {}
 
-void utochinese(char* input,char*out)
+void unicode2utf8(char* input)
 {
-  char tmp[11]={0};
+  char tmp[7]={0};
   sprintf(tmp,"0x%s",input);
   unsigned long i=strtoul(tmp,NULL,16);
   //printf("%lu\n",i);
@@ -259,27 +259,50 @@ void utochinese(char* input,char*out)
   strncat(s[0],ss,4);
   strncat(s[1],ss+4,6);
   strncat(s[2],ss+10,6);
+  char outtmp[4]={0};
   for (size_t j = 0; j < 3; j++)
   {
-      out[j]=strtoul(s[j],NULL,2);
+      outtmp[j]=strtoul(s[j],NULL,2);
      // printf("%d\n",out[i]);
   }
+  memset(input,0,5);
+  strcpy(input,outtmp);
 }
 
-void unicodetoutf8(char*input,char*out)
-{
+// void unicode2chinese(char*input,char*out)
+// {
     
+//     char *tmp=NULL,*ser=input;
+//     while ((tmp=strstr(ser,"\\u"))!=NULL)
+//     {
+//         char ii[5]={0},oo[4]={0};
+//         strncpy(ii,tmp+2,4);
+//         unicode2utf8(ii,oo);
+//         strncat(out,ser,tmp-ser);
+//         strncat(out,oo,3);
+//         ser=tmp+6;
+//     }
+//     strcat(out,ser);
+    
+// }
+void unicode2chinese(char*input)
+{
+    size_t l_input=strlen(input);
+    char outtmp[l_input+1];
+    memset(outtmp,0,l_input+1);
     char *tmp=NULL,*ser=input;
     while ((tmp=strstr(ser,"\\u"))!=NULL)
     {
-        char ii[5]={0},oo[4]={0};
+        char ii[5]={0};
         strncpy(ii,tmp+2,4);
-        utochinese(ii,oo);
-        strncat(out,ser,tmp-ser);
-        strncat(out,oo,3);
+        unicode2utf8(ii);
+        strncat(outtmp,ser,tmp-ser);
+        strncat(outtmp,ii,3);
         ser=tmp+6;
     }
-    strcat(out,ser);
+    strcat(outtmp,ser);
+    memset(input,0,l_input);
+    strcpy(input,outtmp);
     
 }
 
@@ -307,7 +330,7 @@ char* findKeyValueF(char*key,char*src)
     memset(keytmp,0,k_len+4);
     sprintf(keytmp,"\"%s\":",key);
     char* tmpl=strstr(src,keytmp);
-    char* res=NULL;
+    char* res2=NULL;
     if (tmpl!=NULL)
     {
         tmpl=tmpl+k_len+3;
@@ -320,11 +343,69 @@ char* findKeyValueF(char*key,char*src)
                 tmpr-=1;
             }
             size_t res_len=tmpr-tmpl;
-            res=calloc(res_len+1,1);
-            strncpy(res,tmpl,res_len);
+          //  char* res=calloc(res_len+1,1);
+            res2=calloc(res_len+1,1);
+            strncpy(res2,tmpl,res_len);
+            unicode2chinese(res2);
+            // free(res);
+            // res=NULL;
 
         }
         
     }
-    return res;
+    return res2;
+}
+
+char* jsonKeyGetVal(char* key,char*src)
+{
+   struct Node* head=creatNodeF(NULL);
+   size_t c=split2NodeF(key,".",head);
+   if (c==0)
+   {
+      return NULL;
+   }
+   struct Node* tmp=head;
+   char* tmpsrc=src; 
+   while (tmp!=NULL)
+   {
+     // printf("%s\n",tmp->data);
+      size_t k_len=strlen(tmp->data);
+      char keytmp[k_len+4];
+      memset(keytmp,0,k_len+4);
+      sprintf(keytmp,"\"%s\":",tmp->data);
+      char* tp=strstr(tmpsrc,keytmp);
+      
+      if (tp==NULL)
+      {
+         break;
+      }
+      c--;
+      tmpsrc=tp+k_len+3;
+      tmp=tmp->next;
+   }
+   char* res2=NULL;
+   if (c==0&&*tmpsrc!='{')
+   {
+      char*tmpr=strstr(tmpsrc,",\"");
+      if (tmpr!=NULL)
+      {
+         if (*tmpsrc=='"'&&*(tmpr-1)=='"')
+         {
+            tmpsrc+=1;
+            tmpr-=1;
+         }
+         size_t res_len=tmpr-tmpsrc;
+        // char* res=calloc(res_len+1,1);
+         res2=calloc(res_len+1,1);
+         strncpy(res2,tmpsrc,res_len);
+         unicode2chinese(res2);
+        //  free(res);
+        //  res=NULL;
+        // return res2;
+      } 
+      
+   }
+   freeNode(head,true);
+   return res2;
+
 }

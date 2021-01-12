@@ -170,7 +170,7 @@ bool httpinfo(char*url,char*data,char*refer,char*ck,int i,char *name)
                  size_t r_len=strlen(h2.result);
                 char res[r_len+1];
                 memset(res,0,r_len+1);
-                unicodetoutf8(h2.result,res);
+                unicode2chinese(h2.result,res);
                
                 REDLOG("%d-%s-%s-no-%s",i,name,mo,res);
             }
@@ -211,7 +211,7 @@ void get_uid(char *ck)
             if (nametmp!=NULL)
             {
                 char name[64]={0};
-                unicodetoutf8(nametmp,name);   
+                unicode2chinese(nametmp,name);   
                 GREENLOG("当前用户名:%s,uid=%s",name,preuid);
                 //return true;
             }
@@ -231,7 +231,7 @@ void get_uid(char *ck)
         {
             *(tm+1)='\0';
         }     
-        unicodetoutf8(r,rtmp);
+        unicode2chinese(r,rtmp);
         REDLOG("uid获取错误:%s",rtmp);
         exit(EXIT_FAILURE);
     }
